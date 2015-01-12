@@ -1,0 +1,5 @@
+#Don't sync the virtual environment python is installed in
+venv
+
+#Don't sync the client id and secret for the Google API project
+client_secret.json
