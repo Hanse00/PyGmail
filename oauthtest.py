@@ -6,8 +6,15 @@ import logging
 
 POST_URL = "https://accounts.google.com/o/oauth2/device/code"
 TOKEN_URL = "https://accounts.google.com/o/oauth2/token"
-SCOPE = "profile"
+SCOPE = "profile https://www.googleapis.com/auth/plus.me"
 GRANT_TYPE = "http://oauth.net/grant_type/device/1.0"
+PEOPLE_API = "https://www.googleapis.com/plus/v1/people/me"
+
+#logging.basicConfig()
+#logging.getLogger().setLevel(logging.DEBUG)
+#requests_log = logging.getLogger("requests.packages.urllib3")
+#requests_log.setLevel(logging.DEBUG)
+#requests_log.propagate = True
 
 f = open("client_secret.json", "r")
 client_secret_file = json.load(f)
@@ -49,4 +56,17 @@ while poll_time <= expiration_window:
 else:
     print "Login timed out"
     sys.exit(0)
-print json.loads(response2.text)
+
+print response_json2['access_token']
+
+header3 = {"Authorization": "Bearer " + response_json2['access_token']}
+response3 = requests.get(PEOPLE_API, headers=header3)
+
+print response3.text
+
+response_json3 = json.loads(response3.text)
+print response_json3
+
+name = response_json3['displayName']
+
+print "Welcome " + name + "!"
