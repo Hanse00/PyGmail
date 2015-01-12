@@ -1,5 +1,5 @@
 import json
-from subprocess import call
+import requests
 
 POST_URL = "https://accounts.google.com/o/oauth2/device/code"
 SCOPE = "profile"
@@ -14,5 +14,13 @@ client_secret = client_secret_file['installed']['client_secret']
 print "Client ID: " + client_id
 print "Client Secret: " + client_secret
 
-response = call("curl -d \"client_id=" + client_id + "&scope=" + SCOPE + "\" " + POST_URL)
-print response
+payload = {'client_id': client_id, "scope": SCOPE}
+response = requests.post(POST_URL, params=payload)
+
+response_json = json.loads(response.text)
+
+verification_url = response_json['verification_url']
+user_code = response_json['user_code']
+
+print "Verification URL: " + verification_url
+print "User code: " + user_code
